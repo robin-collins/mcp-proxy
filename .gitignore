@@ -46,3 +46,5 @@ vendor/
 # Uncomment these if you want to exclude configs with API keys
 # proxy-config.json
 # claude-config.json
+proxy-config.json
+claude-config.json
