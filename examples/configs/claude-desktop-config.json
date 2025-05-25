@@ -1,10 +1,10 @@
 {
   "mcpServers": {
     "mcp-proxy": {
-      "command": "/path/to/mcp-proxy/build/mcp-proxy",
+      "command": "/path/to/your/mcp-proxy/build/mcp-proxy",
       "args": [
         "--config",
-        "/path/to/mcp-proxy/config.json"
+        "/path/to/your/mcp-proxy/config.json"
       ],
       "env": {}
     }

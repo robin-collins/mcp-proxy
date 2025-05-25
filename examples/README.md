@@ -183,7 +183,11 @@ npm install -g @modelcontextprotocol/server-github
 npm install -g @modelcontextprotocol/server-brave-search
 npm install -g @modelcontextprotocol/server-puppeteer
 
-# Install Python-based servers
+# Install Python-based servers (choose one method)
+# Using uv (recommended):
+uvx mcp-server-git
+
+# Or using pip:
 pip install mcp-server-git
 ```
 

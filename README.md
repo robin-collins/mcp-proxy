@@ -52,6 +52,7 @@ cp claude-config.example.json claude-config.json
 
 Replace your Claude Desktop configuration:
 
+**On macOS:**
 ```bash
 # Backup current config
 cp "~/Library/Application Support/Claude/claude_desktop_config.json" \
@@ -61,10 +62,20 @@ cp "~/Library/Application Support/Claude/claude_desktop_config.json" \
 cp claude-config.json "~/Library/Application Support/Claude/claude_desktop_config.json"
 ```
 
+**On Windows:**
+```bash
+# Backup current config
+cp "%APPDATA%/Claude/claude_desktop_config.json" \
+   "%APPDATA%/Claude/claude_desktop_config.json.backup"
+
+# Update with proxy config (edit paths first!)
+cp claude-config.json "%APPDATA%/Claude/claude_desktop_config.json"
+```
+
 ### 5. Start the Proxy
 
 ```bash
-./start-proxy.sh
+./build/mcp-proxy --config config.json
 ```
 
 ### 6. Restart Claude Desktop

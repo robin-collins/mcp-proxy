@@ -21,7 +21,7 @@
       "args": [
         "-y",
         "@modelcontextprotocol/server-filesystem",
-        "/Users/username/Documents"
+        "/path/to/your/documents"
       ]
     }
   }
