@@ -1,18 +1,43 @@
-# Created by https://www.toptal.com/developers/gitignore/api/goland,go
-# Edit at https://www.toptal.com/developers/gitignore?templates=goland,go
-
-### Go ###
-# If you prefer the allow list template instead of the deny list, see community template:
-# https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
-#
-# Binaries for programs and plugins
+# Binaries
+build/
 *.exe
-*.exe~
 *.dll
 *.so
 *.dylib
 
-# Test binary, built with `go test -c`
+# Environment variables and secrets
+.env
+*.key
+*.pem
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+
+# Node modules (if any)
+node_modules/
+
+# Go specific
 *.test
 
 # Output of the go coverage tool, specifically when used with LiteIDE
@@ -145,3 +170,12 @@ fabric.properties
 
 .specstory/
 references/
+*.prof
+vendor/
+
+# Configuration with sensitive data (we'll create sanitized versions)
+# Uncomment these if you want to exclude configs with API keys
+# proxy-config.json
+# claude-config.json
+proxy-config.json
+claude-config.json
