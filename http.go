@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"log"
 	"net/http"
@@ -73,6 +74,24 @@ func recoverMiddleware(prefix string) MiddlewareFunc {
 	}
 }
 
+// healthCheckHandler returns a JSON health status, mcp_servers, and process uptime
+func healthCheckHandler(config *Config) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		uptime := time.Since(startTime)
+		mcpServers := make([]string, 0, len(config.McpServers))
+		for name := range config.McpServers {
+			mcpServers = append(mcpServers, name)
+		}
+		response := map[string]interface{}{
+			"status":      "healthy",
+			"mcp_servers": mcpServers,
+			"uptime":      uptime.String(),
+		}
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(response)
+	}
+}
+
 func startHTTPServer(config *Config) error {
 
 	baseURL, uErr := url.Parse(config.McpProxy.BaseURL)
@@ -138,6 +157,9 @@ func startHTTPServer(config *Config) error {
 			return nil
 		})
 	}
+
+	// Register /healthCheck/ endpoint (no auth, no middleware)
+	httpMux.HandleFunc("/healthCheck/", healthCheckHandler(config))
 
 	go func() {
 		err := errorGroup.Wait()

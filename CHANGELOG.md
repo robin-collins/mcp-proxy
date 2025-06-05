@@ -1,0 +1,2 @@
+- Added /healthCheck/ endpoint that returns JSON with status, mcp_servers, and process uptime (process uptime only). No authentication required.
+- Added FILETREE.md to document the project file structure and purpose
