@@ -130,7 +130,6 @@ type FullConfig struct {
 }
 
 func load(path string) (*Config, error) {
-
 	conf, err := confstore.Load[FullConfig](path)
 	if err != nil {
 		return nil, err

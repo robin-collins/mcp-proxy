@@ -7,8 +7,10 @@ import (
 	"time"
 )
 
-var BuildVersion = "dev"
-var startTime time.Time // Track process start time
+var (
+	BuildVersion = "dev"
+	startTime    time.Time // Track process start time
+)
 
 func main() {
 	startTime = time.Now() // Set process start time

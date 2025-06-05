@@ -88,12 +88,14 @@ func healthCheckHandler(config *Config) http.HandlerFunc {
 			"uptime":      uptime.String(),
 		}
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(response)
+		if err := json.NewEncoder(w).Encode(response); err != nil {
+			log.Printf("Failed to encode response: %v", err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		}
 	}
 }
 
 func startHTTPServer(config *Config) error {
-
 	baseURL, uErr := url.Parse(config.McpProxy.BaseURL)
 	if uErr != nil {
 		return uErr
