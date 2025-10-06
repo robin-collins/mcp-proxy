@@ -167,6 +167,9 @@ fabric.properties
 
 /mcp-proxy
 /build
+/dist
+config_prod.json
+
 
 .specstory/
 references/

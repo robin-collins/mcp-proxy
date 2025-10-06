@@ -140,7 +140,6 @@ func healthCheckHandler(config *Config) http.HandlerFunc {
 		}
 	}
 }
-
 func startHTTPServer(config *Config) error {
 	baseURL, uErr := url.Parse(config.McpProxy.BaseURL)
 	if uErr != nil {
@@ -167,7 +166,6 @@ func startHTTPServer(config *Config) error {
 		}
 		// Store the client in activeClients
 		activeClients[name] = mcpClient
-
 		server, err := newMCPServer(name, config.McpProxy, clientConfig)
 		if err != nil {
 			return err
@@ -204,13 +202,13 @@ func startHTTPServer(config *Config) error {
 			httpServer.RegisterOnShutdown(func() {
 				log.Printf("<%s> Shutting down", name)
 				_ = mcpClient.Close()
-				delete(activeClients, name)
+				delete(activeClients, name) // <-- KEEP OURS
 			})
 			return nil
 		})
 	}
 
-	// Register /healthCheck/ endpoint (no auth, no middleware)
+	// Register /healthCheck/ endpoint (no auth, no middleware) <-- KEEP OURS
 	httpMux.HandleFunc("/healthCheck/", healthCheckHandler(config))
 
 	go func() {
@@ -222,8 +220,9 @@ func startHTTPServer(config *Config) error {
 	}()
 
 	go func() {
-		log.Printf("Starting SSE server")
-		log.Printf("SSE server listening on %s", config.McpProxy.Addr)
+		// Use dynamic logging from Robin's branch
+		log.Printf("Starting %s server", config.McpProxy.Type)
+		log.Printf("%s server listening on %s", config.McpProxy.Type, config.McpProxy.Addr)
 		hErr := httpServer.ListenAndServe()
 		if hErr != nil && !errors.Is(hErr, http.ErrServerClosed) {
 			log.Fatalf("Failed to start server: %v", hErr)

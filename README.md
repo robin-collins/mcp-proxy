@@ -31,18 +31,44 @@ Claude Desktop → MCP Proxy → Your Individual MCP Servers
 ## Features
 
 - **Proxy Multiple MCP Clients**: Connects to multiple MCP resource servers and aggregates their tools and capabilities.
-- **SSE / HTTP Streaming MCPSupport**: Provides an SSE (Server-Sent Events) or HTTP streaming interface for real-time updates from MCP clients.
+- **SSE / HTTP Streaming MCP Support**: Provides an SSE (Server-Sent Events) or HTTP streaming interface for real-time updates from MCP clients.
 - **Flexible Configuration**: Supports multiple client types (`stdio`, `sse` or `streamable-http`) with customizable settings.
 
-## Installation
+## Documentation
 
-### Build from Source
+- Configuration: [docs/configuration.md](docs/CONFIGURATION.md)
+- Usage: [docs/usage.md](docs/USAGE.md)
+- Deployment: [docs/deployment.md](docs/DEPLOYMENT.md)
+- Claude config converter: https://tbxark.github.io/mcp-proxy
 
 ```bash
-git clone https://github.com/jlwainwright/mcp-proxy-setup.git
-cd mcp-proxy-setup
+git clone https://github.com/TBXark/mcp-proxy.git
+cd mcp-proxy
 make build
 ```
+
+### Install via Go
+
+```bash
+go install github.com/TBXark/mcp-proxy@latest
+```
+
+### Docker
+
+The image includes support for launching MCP servers via `npx` and `uvx`.
+
+```bash
+docker run -d -p 9090:9090 -v /path/to/config.json:/config/config.json ghcr.io/tbxark/mcp-proxy:latest
+# or provide a remote config
+docker run -d -p 9090:9090 ghcr.io/tbxark/mcp-proxy:latest --config https://example.com/config.json
+```
+
+More deployment options (including docker‑compose) are in [docs/deployment.md](docs/DEPLOYMENT.md).
+
+## Configuration
+
+See full configuration reference and examples in [docs/configuration.md](docs/CONFIGURATION.md).
+An online Claude config converter is available at: https://tbxark.github.io/mcp-proxy
 
 ### 3. Configure
 
@@ -291,6 +317,8 @@ For http streaming mcp servers, the `url` field is required. and `transportType`
 
 
 ## Usage
+
+Command‑line flags, endpoints, and auth examples are documented in [docs/usage.md](docs/USAGE.md).
 
 ```
 Usage of mcp-proxy:
