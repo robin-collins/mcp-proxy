@@ -182,3 +182,5 @@ vendor/
 # claude-config.json
 proxy-config.json
 claude-config.json
+
+reports/
