@@ -35,7 +35,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}   # or use GHCR_PAT if needed
+          password: ${{ secrets.GHCR_PAT }}   # or use GHCR_PAT if needed
 
       - name: Set image variables
         id: vars
