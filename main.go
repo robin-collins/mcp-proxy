@@ -4,11 +4,16 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"time"
 )
 
-var BuildVersion = "dev"
+var (
+	BuildVersion = "dev"
+	startTime    time.Time // Track process start time
+)
 
 func main() {
+	startTime = time.Now() // Set process start time
 	conf := flag.String("config", "config.json", "path to config file or a http(s) url")
 	insecure := flag.Bool("insecure", false, "allow insecure HTTPS connections by skipping TLS certificate verification")
 	expandEnv := flag.Bool("expand-env", true, "expand environment variables in config file")

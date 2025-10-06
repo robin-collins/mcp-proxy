@@ -189,7 +189,9 @@ func load(path string, insecure, expandEnv bool, httpHeaders string, httpTimeout
 	if err != nil {
 		return nil, err
 	}
+	// --- MERGE: Insert Robin's V1 Adaptation Call ---
 	adaptMCPClientConfigV1ToV2(conf)
+	// -------------------------------------------------
 
 	if conf.McpProxy == nil {
 		return nil, errors.New("mcpProxy is required")
