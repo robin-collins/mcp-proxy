@@ -21,32 +21,44 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up QEMU (for cross-platform)
+        uses: docker/setup-qemu-action@v2
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
         with:
           install: true
-          driver: docker-container   # required for multi-platform builds
+          driver: docker-container
 
-      - name: Log in to GitHub Container Registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      - name: Log in to GHCR
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}   # or use GHCR_PAT if needed
 
       - name: Set image variables
         id: vars
         run: |
           IMAGE=ghcr.io/${{ github.repository_owner }}/mcp-proxy
-          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
-            VERSION="${GITHUB_REF_NAME}"
-          elif [[ "${GITHUB_REF_NAME}" == "master" ]]; then
+          if [[ "$GITHUB_REF" == refs/tags/* ]]; then
+            VERSION="${GITHUB_REF#refs/tags/}"
+          elif [[ "$GITHUB_REF" == refs/heads/master ]]; then
             VERSION="master"
           else
-            VERSION="${{ github.event.inputs.version || 'latest' }}"
+            VERSION="${{ github.event.inputs.version }}"
+            if [ -z "$VERSION" ]; then VERSION="latest"; fi
           fi
           echo "IMAGE=$IMAGE" >> $GITHUB_OUTPUT
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
 
-      - name: Build and Push multi-arch image
-        run: |
-          docker buildx build --platform linux/amd64,linux/arm64 \
-            -t ${{ steps.vars.outputs.IMAGE }}:${{ steps.vars.outputs.VERSION }} \
-            -t ${{ steps.vars.outputs.IMAGE }}:latest \
-            --push .
+      - name: Build & push (multi-arch)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ${{ steps.vars.outputs.IMAGE }}:${{ steps.vars.outputs.VERSION }}
+            ${{ steps.vars.outputs.IMAGE }}:latest
