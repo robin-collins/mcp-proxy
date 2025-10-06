@@ -1,27 +1,46 @@
 name: Build and Publish Docker Image
 
 on:
+  push:
+    branches: [ master ]
+    tags: [ 'v*' ]          # builds when tags like v1.2.3 are pushed
   workflow_dispatch:
     inputs:
       version:
-        description: 'Image Version'
+        description: "Image version (optional override)"
         required: false
-        default: 'latest'
+        default: "latest"
 
 jobs:
   build-and-push:
-    permissions:
-        packages: write
-        contents: read
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
     steps:
-      - name: Build and Publish Docker Image
-        uses: TBXark/docker-action@v1.0.0      
-        with:
-          docker_registry: ghcr.io
-          # To use the repository owner's username, use 'github.repository_owner' instead of 'github.actor'.
-          docker_username: ${{ github.repository_owner }}
-          docker_password: ${{ secrets.GITHUB_TOKEN }}
-          backup_registry: ${{ secrets.BACKUP_REGISTRY }}
-          backup_username: ${{ secrets.BACKUP_USERNAME }}
-          backup_password: ${{ secrets.BACKUP_PASSWORD }}
+      - uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Set image variables
+        id: vars
+        run: |
+          IMAGE=ghcr.io/${{ github.repository_owner }}/mcp-proxy
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            VERSION="${GITHUB_REF_NAME}"
+          elif [[ "${GITHUB_REF_NAME}" == "master" ]]; then
+            VERSION="master"
+          else
+            VERSION="${{ github.event.inputs.version || 'latest' }}"
+          fi
+          echo "IMAGE=$IMAGE" >> $GITHUB_OUTPUT
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Build and Push multi-arch image
+        run: |
+          docker buildx build --platform linux/amd64,linux/arm64 \
+            -t ${{ steps.vars.outputs.IMAGE }}:${{ steps.vars.outputs.VERSION }} \
+            -t ${{ steps.vars.outputs.IMAGE }}:latest \
+            --push .
