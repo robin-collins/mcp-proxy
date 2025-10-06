@@ -15,12 +15,12 @@ jobs:
         contents: read
     runs-on: ubuntu-latest
     steps:
-      - name: Build and push Docker image
-        uses: TBXark/docker-action@master
+      - name: Build and Publish Docker Image
+        uses: TBXark/docker-action@v1.0.0      
         with:
-          version: ${{ github.event.inputs.version || 'latest' }}
           docker_registry: ghcr.io
-          docker_username: ${{ github.actor }}
+          # To use the repository owner's username, use 'github.repository_owner' instead of 'github.actor'.
+          docker_username: ${{ github.repository_owner }}
           docker_password: ${{ secrets.GITHUB_TOKEN }}
           backup_registry: ${{ secrets.BACKUP_REGISTRY }}
           backup_username: ${{ secrets.BACKUP_USERNAME }}
