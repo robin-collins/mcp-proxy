@@ -17,7 +17,7 @@ RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm && \
     ln -s /usr/local/bin/node /usr/local/bin/nodejs
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends curl wget libsqlcipher1 libsqlcipher-dev && \
+    apt-get install -y --no-install-recommends curl wget libsqlcipher1 libsqlcipher-dev build-essential python3-dev libssl-dev && \
     rm -rf /var/lib/apt/lists/*
 
 
