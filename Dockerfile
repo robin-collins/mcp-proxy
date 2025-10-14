@@ -5,9 +5,9 @@ RUN go mod download
 COPY . .
 RUN make build
 
-FROM node:lts-bookworm-slim AS node
+FROM node:lts-trixie-slim AS node
 
-FROM ghcr.io/astral-sh/uv:python3.13-bookworm-slim
+FROM ghcr.io/astral-sh/uv:python3.13-trixie-slim
 
 COPY --from=node /usr/local/bin/node /usr/local/bin/node
 #COPY --from=node /usr/local/include/node /usr/local/include/node
@@ -17,7 +17,7 @@ RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm && \
     ln -s /usr/local/bin/node /usr/local/bin/nodejs
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends curl wget && \
+    apt-get install -y --no-install-recommends curl wget libsqlcipher1 libsqlcipher-dev && \
     rm -rf /var/lib/apt/lists/*
 
 
