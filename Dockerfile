@@ -20,6 +20,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends curl wget libsqlcipher1 libsqlcipher-dev build-essential python3-dev libssl-dev && \
     rm -rf /var/lib/apt/lists/*
 
+RUN uv python install 3.12 && uv python pin 3.12
 
 COPY --from=builder /app/build/mcp-proxy /main
 ENTRYPOINT ["/main"]
