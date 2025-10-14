@@ -22,6 +22,8 @@ RUN apt-get update && \
 
 RUN uv python install 3.12 && uv python pin 3.12
 
+ENV PATH="/root/.local/bin:${PATH}"
+
 COPY --from=builder /app/build/mcp-proxy /main
 ENTRYPOINT ["/main"]
 CMD ["--config", "/config/config.json"]
